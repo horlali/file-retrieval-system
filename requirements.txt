@@ -1,0 +1,2 @@
+pyro4=4.82
+streamlit=1.23.1
