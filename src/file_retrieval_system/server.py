@@ -20,7 +20,6 @@ class FileServer(object):
 
     def list_files(self):
         files = []
-        print(self.directory)
         for filename in os.listdir(self.directory):
             path = os.path.join(self.directory, filename)
             if os.path.isfile(path):
