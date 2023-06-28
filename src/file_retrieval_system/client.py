@@ -90,7 +90,7 @@ def app():
     # Download files without encryption
     download_file_unsecurely()
 
-    # Download files without encryption
+    # Download files with encryption
     download_file_securely()
 
 
