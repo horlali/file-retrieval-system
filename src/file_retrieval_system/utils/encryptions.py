@@ -22,24 +22,22 @@ def encrypt(message, key):
     """
     Encrypts a message using the given key
     """
-    return rsa.encrypt(message.encode("ascii"), key)
+    return rsa.encrypt(message, key)
 
 
 def decrypt(ciphertext, key):
     """
     Decrypts a ciphertext using the given key
     """
-    try:
-        return rsa.decrypt(ciphertext, key).decode("ascii")
-    except Exception:
-        return False
+
+    return rsa.decrypt(ciphertext, key)
 
 
 def sign(message, key):
     """
     Signs a message using the given key
     """
-    return rsa.sign(message.encode("ascii"), key, "SHA-1")
+    return rsa.sign(message, key, "SHA-1")
 
 
 def verify(message, signature, key):
@@ -47,7 +45,7 @@ def verify(message, signature, key):
     Verifies a message using the given key
     """
     try:
-        return rsa.verify(message.encode("ascii"), signature, key) == "SHA-1"
+        return rsa.verify(message, signature, key) == "SHA-1"
     except Exception:
         return False
 

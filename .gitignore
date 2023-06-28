@@ -2,3 +2,5 @@ __pycache__/
 hello.py
 hello.txt
 .env
+privateKey.pem
+publicKey.pem

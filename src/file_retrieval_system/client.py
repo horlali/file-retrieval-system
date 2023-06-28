@@ -40,6 +40,7 @@ def app():
                 f.write(data_str.encode())
 
             st.success(f"File {filename} downloaded successfully!")
+            st.write("The contents of the file are:")
             st.text(data_str)
 
         except FileNotFoundError:
@@ -57,8 +58,8 @@ def app():
             file_contents = server.get_secure_file(filename)
 
             if file_contents:
-                _, privateKey = load_keys()
-                decrypted_data = decrypt(file_contents["data"], privateKey)
+                publicKey, _ = load_keys()
+                decrypted_data = decrypt(file_contents["data"], publicKey)
                 data_bytes = b64decode(decrypted_data)
                 data_str = data_bytes.decode()
 
@@ -66,6 +67,7 @@ def app():
                 f.write(data_str.encode())
 
             st.success(f"File {filename} downloaded successfully!")
+            st.write("The contents of the file is:")
             st.text(data_str)
 
         except FileNotFoundError:

@@ -39,8 +39,15 @@ class FileServer(object):
         with open(os.path.join(self.directory, filename), "rb") as f:
             file_content = f.read()
 
-        ciphertext = encrypt(file_content["data"], publicKey)
-        signature = sign(file_content["data"], privateKey)
+            ciphertext = encrypt(file_content, privateKey)
+            signature = sign(ciphertext, publicKey)
+
+            print("=================")
+            print(ciphertext)
+            print("=================")
+            print(signature)
+
+            return signature
 
 
 daemon = Pyro4.Daemon(host=HOST, port=PORT)
