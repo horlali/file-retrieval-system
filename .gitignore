@@ -5,4 +5,3 @@ privateKey.pem
 publicKey.pem
 dummy.py
 obed.ipynb
-client/*

@@ -11,10 +11,7 @@ URI = f"PYRO:{OBJECT_ID}@{HOST}:{PORT}"
 server = Pyro4.Proxy(URI)
 
 
-def app():
-    st.title("File Retrieval System")
-
-    # Files on server
+def list_files():
     st.header("Files on server")
     st.write("The following files are available on the server:")
     files = server.list_files()
@@ -25,7 +22,8 @@ def app():
         for filename in files:
             st.markdown(f"-     {filename}")
 
-    # Download files without encryption
+
+def download_file_unsecurely():
     st.header("Unencrypted file exchange")
     st.write("Downloading files from this way does not require and key exchange.")
     st.header("retrieve files")
@@ -52,7 +50,8 @@ def app():
         except IsADirectoryError:
             st.error("Please enter a filename on the server directory to download.")
 
-    # Download files without encryption
+
+def download_file_securely():
     st.header("Encrypted file exchange")
     st.write("Downloading files this way requires key exchange.")
     st.header("retrieve files")
@@ -80,6 +79,19 @@ def app():
 
         except IsADirectoryError:
             st.error("Please enter a filename on the server directory to download.")
+
+
+def app():
+    st.title("File Retrieval System")
+
+    # Files on server
+    list_files()
+
+    # Download files without encryption
+    download_file_unsecurely()
+
+    # Download files without encryption
+    download_file_securely()
 
 
 if __name__ == "__main__":
