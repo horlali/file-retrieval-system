@@ -65,7 +65,7 @@ Once the application is up and running, visit <http://127.0.0.1:8501/> or <http:
 
 You should see a Swagger Documentation Page like this
 
-![Alt text](files/home.png)
+![Alt text](files/screenshots/home.png)
 
 ## Changes required for the implementation above to work on a physical network
 

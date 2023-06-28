@@ -1,9 +1,8 @@
+*.pyc
 __pycache__/
-hello.py
-hello.txt
 .env
 privateKey.pem
 publicKey.pem
 dummy.py
 obed.ipynb
-client/
+client/*
