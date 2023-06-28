@@ -42,11 +42,6 @@ class FileServer(object):
             ciphertext = encrypt(file_content, privateKey)
             signature = sign(ciphertext, publicKey)
 
-            print("=================")
-            print(ciphertext)
-            print("=================")
-            print(signature)
-
             return signature
 
 
