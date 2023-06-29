@@ -7,7 +7,7 @@ from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 
-from file_retrieval_system.utils.constants import CLIENT_FILE_DIR, HOST, OBJECT_ID, PORT
+from utils.constants import CLIENT_FILE_DIR, HOST, OBJECT_ID, PORT
 
 # Connect to the server
 URI = f"PYRO:{OBJECT_ID}@{HOST}:{PORT}"
