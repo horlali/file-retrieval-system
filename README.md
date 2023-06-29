@@ -63,7 +63,7 @@ whiles the server is running open another terminal and run the client script
 
 Once the application is up and running, visit <http://127.0.0.1:8501/> or <http://localhost:8501> or in your browser
 
-You should see a Swagger Documentation Page like this
+You should see a Streamlit Page like this
 
 ![Alt text](files/screenshots/home.png)
 
