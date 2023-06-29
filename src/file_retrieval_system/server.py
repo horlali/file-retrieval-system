@@ -1,27 +1,27 @@
 import logging
 import os
+from base64 import b64decode
 
 import Pyro4
+from Crypto.Cipher import AES, PKCS1_OAEP
+from Crypto.PublicKey import RSA
 
 from file_retrieval_system.utils.constants import HOST, OBJECT_ID, PORT, SERVER_FILE_DIR
-from file_retrieval_system.utils.encryptions import (
-    create_keys,
-    encrypt,
-    load_keys,
-    sign,
-)
 
 logging.basicConfig(level=logging.NOTSET)
 logger = logging.getLogger(__name__)
-
-create_keys()
-publicKey, privateKey = load_keys()
 
 
 @Pyro4.expose
 class FileServer(object):
     directory = SERVER_FILE_DIR
-    publicKey, privateKey = load_keys()
+
+    key = RSA.generate(2048)
+    private_key = key.export_key()
+    public_key = key.publickey().export_key()
+
+    def get_public_key(self):
+        return self.public_key
 
     def list_files(self):
         files = []
@@ -35,14 +35,19 @@ class FileServer(object):
         with open(os.path.join(self.directory, filename), "rb") as f:
             return f.read()
 
-    def get_secure_file(self, filename):
+    def get_secure_file(self, filename, encrypted_session_key):
+        cipher_rsa = PKCS1_OAEP.new(self.key)
+        decoded_encrypted_session_key = b64decode(encrypted_session_key["data"])
+        session_key = cipher_rsa.decrypt(decoded_encrypted_session_key)
+
         with open(os.path.join(self.directory, filename), "rb") as f:
             file_content = f.read()
 
-            ciphertext = encrypt(file_content, privateKey)
-            signature = sign(ciphertext, publicKey)
+            # Encrypt the file content using the session key
+            cipher_aes = AES.new(session_key, AES.MODE_EAX)
+            ciphertext, tag = cipher_aes.encrypt_and_digest(file_content)
 
-            return signature
+            return cipher_aes.nonce, tag, ciphertext
 
 
 daemon = Pyro4.Daemon(host=HOST, port=PORT)
