@@ -8,13 +8,13 @@ COURSE WORK 1
 
 | Student                 | ID Number                 |
 | :---------------------- | :------------------------ |
-| ABRAHAM TAMATEY         | 11005270                  |
-| EMMANUEL PEASAH-DARKWAH | 11005092                  |
-| GIDEON AHIADZI          | 11010651                  |
-| MICHAEL KWAME JOHNSON   | 11005246                  |
-| OBED BARNES             | 11005038                  |
-| GIDEON KWAME KUDROHA    | 11009553                  |
-| PASCAL A. TAMEKLOE      | 11005243                  |
+| ABRAHAM TAMATEY         | 110*****                  |
+| EMMANUEL PEASAH-DARKWAH | 110*****                  |
+| GIDEON AHIADZI          | 110*****                  |
+| MICHAEL KWAME JOHNSON   | 110*****                  |
+| OBED BARNES             | 110*****                  |
+| GIDEON KWAME KUDROHA    | 110*****                  |
+| PASCAL A. TAMEKLOE      | 110*****                  |
 
 ## Getting Started
 
