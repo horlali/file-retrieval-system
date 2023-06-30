@@ -9,6 +9,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 SERVER_FILE_DIR = BASE_DIR / "files" / "server"
 CLIENT_FILE_DIR = BASE_DIR / "files" / "client"
 
+Path(SERVER_FILE_DIR).mkdir(parents=True, exist_ok=True)
 Path(CLIENT_FILE_DIR).mkdir(parents=True, exist_ok=True)
 
 OBJECT_ID = os.getenv("OBJECT_ID")
