@@ -31,12 +31,25 @@ Create  and fill out the environment variable files
 cp .env.example .env
 ```
 
+## Dev Toolchain
+
+- [python ^3.11](https://www.python.org/) main programming language
+- [poetry](https://python-poetry.org/) for dependency management
+- [pytest](https://docs.pytest.org/en/stable/) for testing
+- [coverage](https://coverage.readthedocs.io/en/coverage-5.5/) for test coverage
+- [black](https://github.com/psf/black) for code styling
+- [isort](https://pycqa.github.io/isort/) for import sorting styling
+- [flake8](https://flake8.pycqa.org/en/latest/) for linting
+
 ## Setup Local Environment
+
+It is preferable to create and activate a virtual environment before installing the dependencies. You can read more about python virtual environments and how to create and activate it [here](https://realpython.com/python-virtual-environments-a-primer/)
 
 Install the required dependencies
 
 ```bash
 pip install -r requirements.txt
+poetry install
 ```
 
 ## Make Scripts Executable

@@ -1,4 +1,3 @@
-import os
 from base64 import b64decode
 
 import Pyro4
@@ -7,7 +6,8 @@ from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 
-from utils.constants import CLIENT_FILE_DIR, HOST, OBJECT_ID, PORT
+from file_retrieval_system.utils.constants import HOST, OBJECT_ID, PORT
+from file_retrieval_system.utils.exceptions import CannotDownloadFile
 
 # Connect to the server
 URI = f"PYRO:{OBJECT_ID}@{HOST}:{PORT}"
@@ -26,6 +26,14 @@ encrypted_session_key = cipher_rsa.encrypt(session_key)
 
 
 def list_files():
+    files = server.list_files()
+    if not files:
+        return []
+    else:
+        return [file for file in files]
+
+
+def list_files_on_server():
     st.header("Files on server")
     st.write("The following files are available on the server:")
     files = server.list_files()
@@ -40,41 +48,48 @@ def list_files():
 def download_file_unsecurely():
     st.header("Unencrypted file exchange")
     st.write("Downloading files from this way does not require and key exchange.")
-    st.header("Retrieve files")
-    filename = st.text_input("Enter filename to download")
 
-    if st.button("Download"):
+    selected_file = st.selectbox("Please select a file to download", list_files())
+
+    if selected_file:
         try:
-            file_contents = server.get_file(filename)
+            file_contents = server.get_file(selected_file)
 
             if file_contents:
                 data_bytes = b64decode(file_contents["data"])
                 data_str = data_bytes.decode()
+            else:
+                raise CannotDownloadFile("The selected file could not be downloaded.")
 
-            with open(os.path.join(CLIENT_FILE_DIR, filename), "wb") as f:
-                f.write(data_str.encode())
-
-            st.success(f"File {filename} downloaded successfully!")
-            st.write("The contents of the file are:")
-            st.text(data_str)
+            if st.download_button(
+                data=data_bytes, file_name=selected_file, label="Download file"
+            ):
+                st.success(f"File {selected_file} downloaded successfully!")
+                st.write("The contents of the file are:")
+                st.text(data_str)
 
         except FileNotFoundError:
-            st.error(f"The file {filename} does not exist on the server.")
+            st.error(f"The file {selected_file} does not exist on the server.")
 
         except IsADirectoryError:
             st.error("Please enter a filename on the server directory to download.")
+
+        except CannotDownloadFile:
+            st.error("The file could not be downloaded.")
 
 
 def download_file_securely():
     st.header("Encrypted file exchange")
     st.write("Downloading files this way requires key exchange.")
-    st.header("Retrieve files")
-    filename = st.text_input("Enter secure filename to download")
 
-    if st.button("Download files securely"):
+    selected_file = st.selectbox(
+        "Please select a file to download securely", list_files()
+    )
+
+    if selected_file:
         try:
             nonce, tag, ciphertext = server.get_secure_file(
-                filename,
+                selected_file,
                 encrypted_session_key,
             )
 
@@ -86,15 +101,17 @@ def download_file_securely():
             cipher_aes = AES.new(session_key, AES.MODE_EAX, nonce)
             file_content = cipher_aes.decrypt_and_verify(ciphertext, tag)
 
-            with open(os.path.join(CLIENT_FILE_DIR, filename), "wb") as f:
-                f.write(file_content)
-
-            st.success(f"File {filename} downloaded successfully!")
-            st.write("The contents of the file is:")
-            st.text(file_content.decode("utf-8"))
+            if st.download_button(
+                data=file_content,
+                file_name=selected_file,
+                label="Download file securely",
+            ):
+                st.success(f"File {selected_file} downloaded successfully!")
+                st.write("The contents of the file is:")
+                st.text(file_content.decode("utf-8"))
 
         except FileNotFoundError:
-            st.error(f"The file {filename} does not exist on the server.")
+            st.error(f"The file {selected_file} does not exist on the server.")
 
         except IsADirectoryError:
             st.error("Please enter a filename on the server directory to download.")
@@ -104,7 +121,7 @@ def app():
     st.title("File Retrieval System")
 
     # Files on server
-    list_files()
+    list_files_on_server()
 
     # Download files without encryption
     download_file_unsecurely()

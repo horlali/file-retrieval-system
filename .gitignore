@@ -5,3 +5,8 @@ privateKey.pem
 publicKey.pem
 dummy.py
 obed.ipynb
+.coverage
+*.log
+*.pot
+*.pyc
+.pytest_cache/

@@ -1,4 +1,1 @@
-pyro4==4.82
-streamlit==1.23.1
-pycryptodome==3.18.0
-python-dotenv==1.0.0
+poetry==1.5.1
