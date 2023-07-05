@@ -6,7 +6,13 @@ import Pyro4
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 
-from file_retrieval_system.utils.constants import HOST, OBJECT_ID, PORT, SERVER_FILE_DIR
+from file_retrieval_system.utils.constants import (
+    HOST,
+    KEY_FILE_DIR,
+    OBJECT_ID,
+    PORT,
+    SERVER_FILE_DIR,
+)
 
 logging.basicConfig(level=logging.NOTSET)
 logger = logging.getLogger(__name__)
@@ -19,6 +25,12 @@ class FileServer(object):
     key = RSA.generate(2048)
     private_key = key.export_key()
     public_key = key.publickey().export_key()
+
+    with open(os.path.join(KEY_FILE_DIR, "privateKey.pem"), "wb") as f:
+        f.write(private_key)
+
+    with open(os.path.join(KEY_FILE_DIR, "publicKey.pem"), "wb") as f:
+        f.write(public_key)
 
     def get_public_key(self):
         return self.public_key
