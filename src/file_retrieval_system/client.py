@@ -5,6 +5,7 @@ import streamlit as st
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
+from Pyro4.errors import CommunicationError
 
 from file_retrieval_system.utils.constants import HOST, OBJECT_ID, PORT
 from file_retrieval_system.utils.exceptions import CannotDownloadFile
@@ -16,40 +17,57 @@ server = Pyro4.Proxy(URI)
 # Generate a random session key
 session_key = get_random_bytes(16)
 
-# Encrypt the session key using the server's public key
-server_public_key_data = server.get_public_key()["data"]
-decoded_server_public_key = b64decode(server_public_key_data)
 
-server_public_key = RSA.import_key(decoded_server_public_key)
-cipher_rsa = PKCS1_OAEP.new(server_public_key)
-encrypted_session_key = cipher_rsa.encrypt(session_key)
+# Encrypt the session key using the server's public key
+def encrypt_session_key():
+    try:
+        server_public_key_data = server.get_public_key()["data"]
+        decoded_server_public_key = b64decode(server_public_key_data)
+
+        server_public_key = RSA.import_key(decoded_server_public_key)
+        cipher_rsa = PKCS1_OAEP.new(server_public_key)
+        encrypted_session_key = cipher_rsa.encrypt(session_key)
+
+        return encrypted_session_key
+
+    except CommunicationError:
+        st.error("The server is not running.")
 
 
 def list_files():
-    files = server.list_files()
-    if not files:
-        return []
-    else:
-        return [file for file in files]
+    try:
+        files = server.list_files()
+        if not files:
+            return []
+        else:
+            return [file for file in files]
+
+    except CommunicationError:
+        st.error("The server is not running.")
 
 
 def list_files_on_server():
-    st.header("Files on server")
-    st.write("The following files are available on the server:")
-    files = server.list_files()
+    try:
+        st.header("Files on server")
+        st.write("The following files are available on the server:")
+        files = server.list_files()
 
-    if not files:
-        st.write("No files found.")
-    else:
-        for filename in files:
-            st.markdown(f"-     {filename}")
+        if not files:
+            st.write("No files found.")
+        else:
+            for filename in files:
+                st.markdown(f"-     {filename}")
+
+    except CommunicationError:
+        st.error("The server is not running.")
 
 
 def download_file_unsecurely():
     st.header("Unencrypted file exchange")
     st.write("Downloading files from this way does not require and key exchange.")
 
-    selected_file = st.selectbox("Please select a file to download", list_files())
+    files = list_files() or []
+    selected_file = st.selectbox("Please select a file to download", files)
 
     if selected_file:
         try:
@@ -74,6 +92,9 @@ def download_file_unsecurely():
         except IsADirectoryError:
             st.error("Please enter a filename on the server directory to download.")
 
+        except CommunicationError:
+            st.error("The server is not running.")
+
         except CannotDownloadFile:
             st.error("The file could not be downloaded.")
 
@@ -82,12 +103,13 @@ def download_file_securely():
     st.header("Encrypted file exchange")
     st.write("Downloading files this way requires key exchange.")
 
-    selected_file = st.selectbox(
-        "Please select a file to download securely", list_files()
-    )
+    files = list_files() or []
+    selected_file = st.selectbox("Please select a file to download securely", files)
 
     if selected_file:
         try:
+            encrypted_session_key = encrypt_session_key()
+
             nonce, tag, ciphertext = server.get_secure_file(
                 selected_file,
                 encrypted_session_key,
@@ -115,6 +137,9 @@ def download_file_securely():
 
         except IsADirectoryError:
             st.error("Please enter a filename on the server directory to download.")
+
+        except CommunicationError:
+            st.error("The server is not running.")
 
         except CannotDownloadFile:
             st.error("The file could not be downloaded.")
