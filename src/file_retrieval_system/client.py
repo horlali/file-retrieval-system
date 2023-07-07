@@ -116,6 +116,9 @@ def download_file_securely():
         except IsADirectoryError:
             st.error("Please enter a filename on the server directory to download.")
 
+        except CannotDownloadFile:
+            st.error("The file could not be downloaded.")
+
 
 def app():
     st.title("File Retrieval System")
