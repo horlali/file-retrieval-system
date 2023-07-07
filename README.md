@@ -72,6 +72,18 @@ whiles the server is running open another terminal and run the client script
 ./scripts/run-client.sh
 ```
 
+## Encryption Standards Used
+
+The AES amd PKCS1_OAEP encryption standards were used in this project
+
+AES and PKCS1_OAEP are two different cryptographic algorithms that are available in the pycryptodome library.
+
+AES (Advanced Encryption Standard) is a symmetric encryption algorithm that uses a 128-bit, 192-bit, or 256-bit key to encrypt data. It is a very secure algorithm that is widely used in a variety of applications, including data encryption, file encryption, and network security.
+
+PKCS1_OAEP (Public-Key Cryptography Standards #1 Object-Oriented Encryption with Appendix) is an asymmetric encryption algorithm that uses a public key and a private key to encrypt and decrypt data. It is a secure algorithm that is often used to encrypt sensitive data, such as passwords and credit card numbers.
+
+The pycryptodome library provides classes and functions for using both AES and PKCS1_OAEP. For example, the AES.new() class can be used to create an AES cipher object, and the PKCS1_OAEP.new() class can be used to create a PKCS1_OAEP cipher object. These cipher objects can then be used to encrypt and decrypt data.
+
 ## Sample Request and Application Docs
 
 Once the application is up and running, visit <http://127.0.0.1:8501/> or <http://localhost:8501> or in your browser
