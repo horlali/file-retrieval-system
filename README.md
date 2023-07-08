@@ -97,7 +97,7 @@ You should see a Streamlit Page like this
 For the changes to work on a physical we need to we need to change the environment variable file to match requirements for the server
 
 ```bash
-OBJECT_ID = "the desired object id"
-HOST = "the hostname of the server"
-PORT = "the port you want the app to run on"
+OBJECT_ID="the desired object id"
+HOST="the hostname of the server"
+PORT="the port you want the app to run on"
 ```
